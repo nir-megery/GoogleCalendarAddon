@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <!-- This CSS package applies Google styling. -->
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+    <style>
+      .error {
+        color: #FF0000;
+      }
+      .hidden {
+        display: none;
+      }
+      .main-wrapper {
+        width:100%;
+        margin: auto;
+        max-width:600px;
+        height:100%;
+        text-align: center;
+      }
+      .main-content {
+        padding:10px;
+        font-size:18px;
+        line-height:1.4;
+      }
+      #logo {
+        margin-bottom:40px;
+      }
+      #logout-btn {
+        margin:20px;
+      }
+      #footer {
+        margin-top:40px;
+      }
+      #footer a {
+        text-decoration: underline;
+        margin: 0px 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="main-wrapper">
+      
+    <img id="logo" src="https://lh3.googleusercontent.com/-4gu8sVYHceY/XfYN1UfH6qI/AAAAAAAABL0/OKVfuc1F0ooevDPYruQwIWAQdUTb9l1eACLcBGAsYHQ/s400/gong_logo-on-light.png" alt="Gong Logo" />
+    <div class="main-content">
+      <div id="loading">Loading ...</div>
+      <div id="error-loading" class="hidden">Unable to show Gong for Google Calendar settings right now. Try again later.</div>
+      <div id="signed-in" class="hidden" >
+        <div id="signed-in-message" >You are logged in to Gong for Google Calendar add-on</div>
+        <button id="logout-btn">Log out</button>
+      </div>
+      <div id="not-signed-in" class="hidden">You can log in to Gong for Google Calendar while creating a calendar meeting with Gong conferencing</div>
+      <div id="success" class="hidden">You have logged out successfully</div>
+      <div id="error" class="hidden error">Unable to log out right now. Try again later.</div>
+    </div>
+    <div id="footer">
+      This application was created by Gong, not by Google<br/>
+      <a target="_blank" href="https://www.gong.io">Gong</a>
+      <a target="_blank" href="https://help.gong.io/">Support</a>
+    </div>
+    
+    </div>
+  
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      var loggedIn;
+      $(function() {
+        $('#logout-btn').bind('click',onLogout);
+        google.script.run.withSuccessHandler(function(res) {
+          loggedIn = res;
+          $('#loading').addClass('hidden');
+          if (loggedIn) {
+            $('#signed-in').removeClass('hidden');
+          } else {
+            $('#not-signed-in').removeClass('hidden');
+          }
+        }).withFailureHandler(function() {
+          $('#loading').addClass('hidden');
+          $('#error-loading').removeClass('hidden');
+        }).isLoggedIn();
+      });
+      function onLogout() {
+        $('#logout-btn').attr("disabled", true)
+        google.script.run.withSuccessHandler(function() {
+                 $('#success').removeClass('hidden');
+                 $('#error').addClass('hidden');
+                 $('#signed-in-message').addClass('hidden');
+              })
+           .withFailureHandler(function(msg) {
+                 $('#error').removeClass('hidden');
+                 $('#success').addClass('hidden');
+              }).logout();
+      };
+    </script>
+  </body>
+</html>

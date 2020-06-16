@@ -97,7 +97,13 @@ OAuth2.getRedirectUri = function(scriptId) {
 }
 
 function isLoggedIn() {
-  return getAuthService().hasAccess();
+  console.info("Verify access");
+  try {
+    return getAuthService().hasAccess();
+  }
+  catch (e) {
+    console.error("Failed to check if logged in due to error" , e)
+  }
 }
 
 function getScriptUri() {

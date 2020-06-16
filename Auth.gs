@@ -34,7 +34,7 @@ function getAuthService() {
  * webpp handler
  */
 function doGet(e) {  
-  console.log(e);
+  console.debug(e);
   if(e.parameter['code'] != null){
     return authCallback(e);
     
@@ -51,7 +51,7 @@ function doGet(e) {
 
 
 function authCallback(request) {
-    console.log(request);
+    console.debug(request);
 
   var authService = getAuthService();
   var code = request.parameter['code'];
@@ -86,13 +86,13 @@ function authCallback(request) {
 }
 
 function logout(request) {
-  console.log('Resetting oauth credentials');
+  console.info('Resetting oauth credentials');
   getAuthService().reset();
   return HtmlService.createHtmlOutput('ok');
 }
 
 OAuth2.getRedirectUri = function(scriptId) {
-  console.log(scriptId);
+  console.info(scriptId);
   return getScriptUri();
 }
 

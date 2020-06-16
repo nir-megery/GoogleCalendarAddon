@@ -5,7 +5,7 @@
  *  @param {String} calendarId The ID of the Google Calendar.
  */
 function initializeSyncing(calendarId) {
-  console.log('initializeSyncing of calendar', calendarId);
+  console.info('initializeSyncing of calendar', calendarId);
   
   // Create a syncing trigger if it doesn't exist yet.
   createSyncTrigger(calendarId);
@@ -23,17 +23,17 @@ function initializeSyncing(calendarId) {
 function createSyncTrigger(calendarId) {
   // Check to see if the trigger already exists; if does, return.
   var allTriggers = ScriptApp.getProjectTriggers();
-  console.log('allTriggers.length', allTriggers.length);
+  console.debug('allTriggers.length', allTriggers.length);
   
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
-    console.log('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
+    console.debug('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
   }
   
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
-    console.log('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
-    console.log('trigger.getHandlerFunction:', trigger.getHandlerFunction());
+    console.debug('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
+    console.debug('trigger.getHandlerFunction:', trigger.getHandlerFunction());
     if (trigger.getTriggerSourceId() === calendarId || trigger.getHandlerFunction() === 'syncEvents') {
       return;
     }
@@ -48,7 +48,7 @@ function createSyncTrigger(calendarId) {
       .onEventUpdated()
       .create();
   
-  console.log('new trigger:', trigger);
+  console.debug('new trigger:', trigger);
 }
 
 
@@ -67,7 +67,7 @@ function createSyncTrigger(calendarId) {
  *      however.
  */
 function syncEvents(e) {
-  console.log("syncEvents:", e);
+  console.debug("syncEvents:", e);
   var calendarId = e.calendarId;
   var properties = PropertiesService.getUserProperties();
   var syncToken = properties.getProperty('syncToken');
@@ -114,7 +114,7 @@ function syncEvents(e) {
         syncEvents(e);
         return;
       } else {
-        console.log('err', err);
+        console.error('err', err);
         throw new Error(err.message);
       }
     }
@@ -175,7 +175,7 @@ function eventHasGongConference(calEvent) {
  *      the third-party conferencing system.
  */
 function updateConference(calEvent, conferenceId) {
-  console.log('calEvent', calEvent);
+  console.info('calEvent', calEvent);
   var accessToken = getAuthService().getAccessToken();
 //  console.log('accessToken', accessToken);
    try {  
@@ -190,13 +190,13 @@ function updateConference(calEvent, conferenceId) {
     var response = UrlFetchApp.fetch(getAPIHost() + '/calendar/updateEvent', options);
 
     var code = response.getResponseCode();
-    console.log('Response: code=', code, ', body=', response.getContentText());
+    console.info('Response: code=', code, ', body=', response.getContentText());
     if (code !== 200) {
-      console.log('updateEvent error');
+      console.warn('updateEvent error');
     }
     
   } catch (e) {
-      console.log('updateEvent error:', e);
+      console.error('updateEvent error:', e);
   }
   
   

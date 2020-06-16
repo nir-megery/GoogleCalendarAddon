@@ -97,6 +97,7 @@ OAuth2.getRedirectUri = function(scriptId) {
 }
 
 function isLoggedIn() {
+  console.log("Dummy message");
   console.info("Verify access");
   try {
     return getAuthService().hasAccess();

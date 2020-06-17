@@ -18,21 +18,20 @@
   },
   "exceptionLogging": "STACKDRIVER",
   "oauthScopes": ["https://www.googleapis.com/auth/calendar.addons.execute", "https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/script.external_request", "https://www.googleapis.com/auth/script.scriptapp"],
-  "urlFetchWhitelist": ["https://app.gong.io/", "https://webhooks.gong.io/"],
-  "runtimeVersion": "V8",
+  "urlFetchWhitelist" : ["https://app.gong.io/", "https://webhooks.gong.io/"],
   "addOns": {
     "common": {
       "name": "Gong",
-      "logoUrl": "https://cdn.icon-icons.com/icons2/836/PNG/64/Google_icon-icons.com_66793.png"
+      "logoUrl": "https://lh3.googleusercontent.com/-Uv8IX_wOZBY/Xef-rzpQabI/AAAAAAAABHI/lq3G2E6RfUAkFuQ8TFu-3eol6AB_m6ZhgCLcBGAsYHQ/s400/Gong%2BLogo96.png"
     },
     "calendar": {
+      "createSettingsUrlFunction": "createSettingsUrl",
       "conferenceSolution": [{
         "onCreateFunction": "createConference",
         "id": "myWebConference",
-        "name": "Gong Meeting - Google",
-        "logoUrl": "https://cdn.icon-icons.com/icons2/836/PNG/64/Google_icon-icons.com_66793.png"
-      }],
-      "createSettingsUrlFunction": "createSettingsUrl"
+        "name": "Gong Meeting",
+        "logoUrl": "https://lh3.googleusercontent.com/-Uv8IX_wOZBY/Xef-rzpQabI/AAAAAAAABHI/lq3G2E6RfUAkFuQ8TFu-3eol6AB_m6ZhgCLcBGAsYHQ/s400/Gong%2BLogo96.png"
+      }]
     }
   }
 }

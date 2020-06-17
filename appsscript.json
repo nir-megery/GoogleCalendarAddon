@@ -29,7 +29,7 @@
       "conferenceSolution": [{
         "onCreateFunction": "createConference",
         "id": "myWebConference",
-        "name": "Gong Meeting - Google",
+        "name": "Gong Meeting - Google 2",
         "logoUrl": "https://cdn.icon-icons.com/icons2/836/PNG/64/Google_icon-icons.com_66793.png"
       }],
       "createSettingsUrlFunction": "createSettingsUrl"

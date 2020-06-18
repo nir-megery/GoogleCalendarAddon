@@ -10,7 +10,7 @@
  */
 
 function createConference(arg) {    // arg={eventData={eventId=01vac5ke5s6cciv4k7ncoe1mn5, calendarId=shmulik.shnoll@gong.io}}
-  console.log("eventData: ", arg);
+  console.info("eventData: ", arg);
   var calendarId = arg.eventData.calendarId;
   var conferenceData = getConferenceData();
   var createMeetingPerUrl = conferenceData.createMeetingPerUrl;
@@ -57,7 +57,7 @@ function getConferenceData() {
   try {    
     accessToken = getAuthService().getAccessToken();
   } catch (e) {
-    console.log('Error getting existing access token=', e);  
+    console.error('Error getting existing access token=', e);
   }
   
   if (!accessToken) {
@@ -66,14 +66,14 @@ function getConferenceData() {
   
   try {  
   
-    console.log(getAPIHost() + '/calendar/getJumpPageInfo');
+    console.info(getAPIHost() + '/calendar/getJumpPageInfo');
 
     var response = UrlFetchApp.fetch(getAPIHost() + '/calendar/getJumpPageInfo', {
                                      headers: {Authorization: 'Bearer ' + accessToken},
                                      muteHttpExceptions: true});
 
       var code = response.getResponseCode();
-      console.log('Response: code=', code, ', body=', response.getContentText());
+      console.info('Response: code=', code, ', body=', response.getContentText());
     
       if (code == 401) {
         return {error: ConferenceDataService.ConferenceErrorType.AUTHENTICATION};
@@ -93,7 +93,7 @@ function getConferenceData() {
       }
     
   } catch (e) {
-      console.log('getConferenceData error:', e);
+      console.error('getConferenceData error:', e);
       return {error: ConferenceDataService.ConferenceErrorType.TEMPORARY};
   }
 }

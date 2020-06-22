@@ -11,9 +11,6 @@
 
 function createConference(arg) {    // arg={eventData={eventId=01vac5ke5s6cciv4k7ncoe1mn5, calendarId=shmulik.shnoll@gong.io}}
   console.info("eventData: ", arg);
-  var calendarId = arg.eventData.calendarId;
-  var eventId = arg.eventData.eventId;
-  addAttendee(calendarId,eventId);
   var conferenceData = getConferenceData();
   var createMeetingPerUrl = conferenceData.createMeetingPerUrl;
   var dataBuilder = ConferenceDataService.newConferenceDataBuilder();
@@ -55,9 +52,12 @@ function createConference(arg) {    // arg={eventData={eventId=01vac5ke5s6cciv4k
 }
 
 function addAttendee(calendarId,eventId){
-    var event = Calendar.Events.get(calendarId,eventId);
-    event.attendees.push("maxim@bulanov.gmail.com");
-    Calendar.Events.update(eventId);
+  var calendarId = 'maxim.bulanov@gong.io';
+  var eventId = '2rqef2m7568nh7fe3p7ffi16ac';
+   var calendar = CalendarApp.getCalendarById(calendarId);
+  var event = calendar.getEventById(eventId);
+  event.addGuest("maximbu@gmail.com");
+  event.addGuest("someone@gmail.com");
 }
 
 function getConferenceData() {

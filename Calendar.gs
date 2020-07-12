@@ -23,17 +23,17 @@ function initializeSyncing(calendarId) {
 function createSyncTrigger(calendarId) {
   // Check to see if the trigger already exists; if does, return.
   var allTriggers = ScriptApp.getProjectTriggers();
-  console.debug('allTriggers.length', allTriggers.length);
+  console.log('allTriggers.length', allTriggers.length);
   
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
-    console.debug('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
+    console.log('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
   }
   
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
-    console.debug('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
-    console.debug('trigger.getHandlerFunction:', trigger.getHandlerFunction());
+    console.log('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
+    console.log('trigger.getHandlerFunction:', trigger.getHandlerFunction());
     if (trigger.getTriggerSourceId() === calendarId || trigger.getHandlerFunction() === 'syncEvents') {
       return;
     }
@@ -48,7 +48,7 @@ function createSyncTrigger(calendarId) {
       .onEventUpdated()
       .create();
   
-  console.debug('new trigger:', trigger);
+  console.log('new trigger:', trigger);
 }
 
 
@@ -67,7 +67,7 @@ function createSyncTrigger(calendarId) {
  *      however.
  */
 function syncEvents(e) {
-  console.debug("syncEvents:", e);
+  console.log("syncEvents:", e);
   var calendarId = e.calendarId;
   var properties = PropertiesService.getUserProperties();
   var syncToken = properties.getProperty('syncToken');

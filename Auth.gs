@@ -34,7 +34,7 @@ function getAuthService() {
  * webpp handler
  */
 function doGet(e) {  
-  console.debug(e);
+  console.log(e);
   if(e.parameter['code'] != null){
     return authCallback(e);
     
@@ -51,7 +51,7 @@ function doGet(e) {
 
 
 function authCallback(request) {
-    console.debug(request);
+    console.log(request);
 
   var authService = getAuthService();
   var code = request.parameter['code'];

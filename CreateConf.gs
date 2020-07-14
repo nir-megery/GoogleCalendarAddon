@@ -58,6 +58,8 @@ function getConferenceData() {
     accessToken = getAuthService().getAccessToken();
   } catch (e) {
     console.error('Error getting existing access token=', e);
+    console.info('Resetting oauth credentials');
+    getAuthService().reset();
   }
   
   if (!accessToken) {

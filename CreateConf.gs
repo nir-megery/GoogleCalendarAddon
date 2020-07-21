@@ -57,7 +57,7 @@ function getConferenceData() {
   try {    
     accessToken = getAuthService().getAccessToken();
   } catch (e) {
-    console.error('Error getting existing access token=', e);
+    console.warn('Error getting existing access token=', e);
   }
   
   if (!accessToken) {

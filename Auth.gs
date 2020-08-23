@@ -92,7 +92,8 @@ function logout(request) {
 }
 
 OAuth2.getRedirectUri = function(scriptId) {
-  console.info(scriptId);
+  console.info("getRedirectUri");
+  console.info("getRedirect", scriptId);
   return getScriptUri();
 }
 
@@ -101,5 +102,6 @@ function isLoggedIn() {
 }
 
 function getScriptUri() {
+    console.info("getScriptUri", ScriptApp.getService().getUrl());
     return ScriptApp.getService().getUrl();
 }

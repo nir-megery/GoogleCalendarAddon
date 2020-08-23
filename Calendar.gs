@@ -163,7 +163,7 @@ function eventHasGongConference(calEvent) {
   // one of the solution names used by the add-on. Alternatively you could
   // check the solution's entry point URIs or other solution-specific
   // information.
-  return (name && name==="Gong Meeting");
+  return (name && name.startswith("Gong Meeting"));
 }
 
 /**

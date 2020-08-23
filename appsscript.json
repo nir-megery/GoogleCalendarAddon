@@ -28,8 +28,8 @@
       "createSettingsUrlFunction": "createSettingsUrl",
       "conferenceSolution": [{
         "onCreateFunction": "createConference",
-        "id": "myWebConference",
-        "name": "Gong Meeting",
+        "id": "myWebConference_yarin",
+        "name": "Gong Meeting (yarin)",
         "logoUrl": "https://lh3.googleusercontent.com/-Uv8IX_wOZBY/Xef-rzpQabI/AAAAAAAABHI/lq3G2E6RfUAkFuQ8TFu-3eol6AB_m6ZhgCLcBGAsYHQ/s400/Gong%2BLogo96.png"
       }]
     }

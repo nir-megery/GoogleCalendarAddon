@@ -74,6 +74,7 @@ function syncEvents(e) {
 
   var options;
   if (syncToken) {
+    console.log("syncToken avail", syncToken);
     // There's an existing sync token, so configure the following event
     // retrieval request to only get events that have been modified
     // since the last sync.
@@ -86,6 +87,7 @@ function syncEvents(e) {
     // A larger time window can be examined during a full sync, but this
     // slows down the script execution. Consider the trade-offs while
     // designing your add-on.
+    console.log("Full sync");
     var now = new Date();
     var yesterday = new Date();
     yesterday.setDate(now.getDate() - 1);
@@ -122,6 +124,7 @@ function syncEvents(e) {
     // Read through the list of returned events looking for conferences
     // to update.
     if (events.items && events.items.length > 0) {
+      console.log("events.items.length", events.items.length);
       for (var i = 0; i < events.items.length; i++) {
          var calEvent = events.items[i];
          // Check to see if there is a record of this event has a
@@ -151,8 +154,8 @@ function syncEvents(e) {
  *  @return {boolean}
  */
 function eventHasGongConference(calEvent) {
-//  console.log('eventHasConference:', calEvent);
-//  console.log('calEvent.conferenceData:' , calEvent.conferenceData)
+ console.log('eventHasConference:', calEvent);
+ console.log('calEvent.conferenceData:' , calEvent.conferenceData)
   
   var name = calEvent.conferenceData && calEvent.conferenceData.conferenceSolution && calEvent.conferenceData.conferenceSolution.name || null;
 
@@ -177,7 +180,7 @@ function eventHasGongConference(calEvent) {
 function updateConference(calEvent, conferenceId) {
   console.info('calEvent', calEvent);
   var accessToken = getAuthService().getAccessToken();
-//  console.log('accessToken', accessToken);
+ console.log('accessToken', accessToken);
    try {  
     var options = {
                      'method' : 'post',

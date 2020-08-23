@@ -1,6 +1,6 @@
 //CHANGE BEFORE GOING TO PRODUCTION
-var ENV='prod';
-//var ENV='dev';
+// var ENV='prod';
+var ENV='dev';
 
 function getHost() {
   return ENV=='prod' ? 'https://app.gong.io' :  'https://' + Session.getActiveUser().getEmail().replace('@gong.io','') + '.wfe.ngrok.io';

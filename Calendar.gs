@@ -136,8 +136,8 @@ function syncEvents(e) {
           console.log("Not updating conference...")
           console.log("1", eventHasGongConference(calEvent));
          console.log("2", calEvent.conferenceData.parameters);
-         console.log("3", calEvent.conferenceData.parameters.addOnParameters);
-         console.log("4", calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl);
+         console.log("3", calEvent.conferenceData.parameters ? calEvent.conferenceData.parameters.addOnParameters : "NULL");
+         console.log("4", calEvent.conferenceData.parameters.addOnParameters ? calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl : "NULL");
          }
       }
     }

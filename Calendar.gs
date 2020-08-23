@@ -173,7 +173,7 @@ function eventHasGongConference(calEvent) {
   if (name) {
     console.log("conferenceSolution", name)
   }
-  return (name && name.startswith("Gong Meeting"));
+  return (name && name.indexOf("Gong Meeting") == 0);
 }
 
 /**

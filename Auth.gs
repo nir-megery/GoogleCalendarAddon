@@ -35,6 +35,7 @@ function getAuthService() {
  */
 function doGet(e) {  
   console.info("doGet", e);
+  Logger.log("request doGet", e);
   if(e.parameter['code'] != null){
     return authCallback(e);
     

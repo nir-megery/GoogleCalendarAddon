@@ -7,5 +7,5 @@ function getHost() {
 }
 
 function getAPIHost() {
-  return ENV=='prod' ? 'https://webhooks.gong.io' :  'http://' + Session.getActiveUser().getEmail().replace('@gong.io','') + '.webhooks.ngrok.io';
+  return ENV=='prod' ? 'https://webhooks.gong.io' :  'https://' + Session.getActiveUser().getEmail().replace('@gong.io','') + '.webhooks.ngrok.io';
 }

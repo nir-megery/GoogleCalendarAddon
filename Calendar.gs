@@ -129,8 +129,15 @@ function syncEvents(e) {
          var calEvent = events.items[i];
          // Check to see if there is a record of this event has a
          // conference that needs updating.
-         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters &&calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
+         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters && calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
+           console.log("Updating the conference!")
            updateConference(calEvent, calEvent.conferenceData.conferenceId);
+         } else {
+          console.log("Not updating conference...")
+          console.log("1", eventHasGongConference(calEvent));
+         console.log("2", calEvent.conferenceData.parameters);
+         console.log("3", calEvent.conferenceData.parameters.addOnParameters);
+         console.log("4", calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl);
          }
       }
     }
@@ -163,6 +170,9 @@ function eventHasGongConference(calEvent) {
   // one of the solution names used by the add-on. Alternatively you could
   // check the solution's entry point URIs or other solution-specific
   // information.
+  if (name) {
+    console.log("conferenceSolution", name)
+  }
   return (name && name.startswith("Gong Meeting"));
 }
 

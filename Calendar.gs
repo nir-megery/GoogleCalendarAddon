@@ -132,16 +132,7 @@ function syncEvents(e) {
         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters && calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
           console.log("Updating the conference!")
           updateConference(calEvent, calEvent.conferenceData.conferenceId);
-        } else {
-          console.log("Not updating conference...")
-          console.log("1", eventHasGongConference(calEvent));
-          if (calEvent.conferenceData) {
-            console.log("2", calEvent.conferenceData.parameters);
-            console.log("3", calEvent.conferenceData.parameters ? calEvent.conferenceData.parameters.addOnParameters : "NULL");
-            console.log("4", calEvent.conferenceData.parameters.addOnParameters ? calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl : "NULL");
-          }
         }
-      }
     }
 
     pageToken = events.nextPageToken;

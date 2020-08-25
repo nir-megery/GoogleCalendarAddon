@@ -1,3 +1,5 @@
+
+var GONG_EVENT_KEY_PREFIX = 'gong_event_';
 /**
  *  Initializes syncing of conference data by creating a sync trigger and
  *  sync token if either does not exist yet.
@@ -131,8 +133,20 @@ function syncEvents(e) {
         // conference that needs updating.
         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters && calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
           console.log("Updating the conference!")
+          // TODO: also handle all-day events
+          console.log("Adding event to store",GONG_EVENT_KEY_PREFIX + calEvent.id, calEvent.getEndTime());
+          properties.setProperty(GONG_EVENT_KEY_PREFIX + calEvent.id, calEvent.getEndTime());
           updateConference(calEvent, calEvent.conferenceData.conferenceId);
         }
+
+        // If event status is 'canelled', we send the notification event only for Gong Meeting events.
+        // NOTE: We do this here because cancelled events don't have conferenceData at all.
+        if (calEvent.status === 'cancelled') {
+          if (properties.getProperty(GONG_EVENT_KEY_PREFIX + calEvent.id)) {
+            updateConference(calEvent, calEvent.conferenceData.conferenceId);
+          }
+        }
+      }
     }
 
     pageToken = events.nextPageToken;
@@ -141,6 +155,19 @@ function syncEvents(e) {
   // Record the new sync token.
   if (events.nextSyncToken) {
     properties.setProperty('syncToken', events.nextSyncToken);
+  }
+
+  // Cleanup: Remove past events from the store
+  var eventKeys = properties.getKeys();
+  for (let i = 0; i < eventKeys.length; i++) {
+    console.log("Event in store", eventKey, properties.getProperty(eventKey));
+    var eventKey = eventKeys[i];
+    if (eventKey.indexOf(GONG_EVENT_KEY_PREFIX) === 0) {
+      var gongEventEndTime = properties.getProperty(eventKey);
+      if (gongEventEndTime > new Date()) {
+        properties.deleteProperty(eventKey);
+      }
+    }
   }
 }
 

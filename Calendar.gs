@@ -159,7 +159,7 @@ function syncEvents(e) {
 
   // Cleanup: Remove past events from the store
   var eventKeys = properties.getKeys();
-  for (let i = 0; i < eventKeys.length; i++) {
+  for (var i = 0; i < eventKeys.length; i++) {
     console.log("Event in store", eventKey, properties.getProperty(eventKey));
     var eventKey = eventKeys[i];
     if (eventKey.indexOf(GONG_EVENT_KEY_PREFIX) === 0) {

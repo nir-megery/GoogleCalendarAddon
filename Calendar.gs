@@ -149,7 +149,7 @@ function syncEvents(e) {
         // NOTE: We do this here because cancelled events don't have conferenceData at all.
         if (calEvent.status === 'cancelled') {
           if (properties.getProperty(GONG_EVENT_KEY_PREFIX + calEvent.id)) {
-            updateConference(calEvent, calEvent.conferenceData.conferenceId);
+            updateConference(calEvent, null);
           }
         }
       }

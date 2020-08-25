@@ -133,9 +133,15 @@ function syncEvents(e) {
         // conference that needs updating.
         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters && calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
           console.log("Updating the conference!")
-          // TODO: also handle all-day events
-          console.log("Adding event to store",GONG_EVENT_KEY_PREFIX + calEvent.id, calEvent.getEndTime());
-          properties.setProperty(GONG_EVENT_KEY_PREFIX + calEvent.id, calEvent.getEndTime());
+          var eventEndTime;
+          if (calEvent.end.date) {
+            // All-day event.
+            eventEndTime = new Date(calEvent.end.date);
+          } else {
+            eventEndTime = new Date(calEvent.end.dateTime);
+          }
+          console.log("Adding event to store",GONG_EVENT_KEY_PREFIX + calEvent.id, eventEndTime);
+          properties.setProperty(GONG_EVENT_KEY_PREFIX + calEvent.id, eventEndTime);
           updateConference(calEvent, calEvent.conferenceData.conferenceId);
         }
 

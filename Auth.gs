@@ -35,7 +35,6 @@ function getAuthService() {
  */
 function doGet(e) {  
   console.info("doGet", e);
-  Logger.log("request doGet", e);
   if(e.parameter['code'] != null){
     return authCallback(e);
     
@@ -52,7 +51,6 @@ function doGet(e) {
 
 
 function authCallback(request) {
-  console.info("We're in authCallback");
   console.info("authCallback", request);
 
   var authService = getAuthService();
@@ -94,8 +92,7 @@ function logout(request) {
 }
 
 OAuth2.getRedirectUri = function(scriptId) {
-  console.info("getRedirectUri");
-  console.info("getRedirect", scriptId);
+  console.info("getRedirectUri", scriptId);
   return getScriptUri();
 }
 

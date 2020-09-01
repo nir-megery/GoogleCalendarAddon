@@ -25,9 +25,10 @@ function getAuthService() {
       // Set the scopes to request (space-separated for Google services).
       .setScope('https://app.gong.io/calendar/add-on')
   
-      .setParam('approval_prompt', 'auto');
-  
-      //.setParam('email',Session.getActiveUser().getEmail());
+      .setParam('approval_prompt', 'auto')
+
+      .setParam('login_hint', Session.getEffectiveUser().getEmail());
+
 }
 
 /**

@@ -58,13 +58,21 @@ function authCallback(request) {
   var code = request.parameter['code'];
   var isAuthorized = code.length>0 && authService.handleCallback(request);
   var additionalInfo = request.parameter['additional-info'];
+  var noProviderUrl = additionalInfo.indexOf('no-provider-url') === 0;
+  var calendarEmailUserMismatch = additionalInfo === 'calender-email-mismatch';
   if (isAuthorized) {
-    if (additionalInfo) {//no-provider-url
+    if (noProviderUrl) {
       var provider = additionalInfo.split('/')[1];
       var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-igkjzvTY6mQ/Xe_L2Npz0KI/AAAAAAAABKY/RgmWNGNkXlkEUkqFW6YJy1pTcchWgeH2wCLcBGAsYHQ/s400/link.png';
       htmlTemplate.title = 'Add your personal meeting room link';
       htmlTemplate.text = 'Log in succeeded. Before scheduling the first Gong meeting, add your ' + provider + ' personal meeting room link to "My Profile" page in Gong.';
+      return htmlTemplate.evaluate();
+    } else if (calendarEmailUserMismatch) {
+      var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
+      htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-igkjzvTY6mQ/Xe_L2Npz0KI/AAAAAAAABKY/RgmWNGNkXlkEUkqFW6YJy1pTcchWgeH2wCLcBGAsYHQ/s400/link.png';
+      htmlTemplate.title = 'Calendar E-mail is not found in Gong';
+      htmlTemplate.text = 'The calendar E-mail is not listed as a valid E-mail address for this Gong user. Consider adding it as an E-mail alias';
       return htmlTemplate.evaluate();
     } else {
       var htmlTemplate = HtmlService.createTemplateFromFile('Close');

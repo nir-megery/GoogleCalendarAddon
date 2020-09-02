@@ -60,15 +60,9 @@ function authCallback(request) {
   var additionalInfo = request.parameter['additional-info'];
   var noProviderUrl = additionalInfo.indexOf('no-provider-url') === 0;
   var calendarEmailUserMismatch = additionalInfo === 'calender-email-mismatch';
+  var consentPageDisabled = additionalInfo === 'consent-page-disabled';
   if (isAuthorized) {
-    if (calendarEmailUserMismatch) {
-      console.log("calendarEmailUserMismatch")
-      var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
-      htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-igkjzvTY6mQ/Xe_L2Npz0KI/AAAAAAAABKY/RgmWNGNkXlkEUkqFW6YJy1pTcchWgeH2wCLcBGAsYHQ/s400/link.png';
-      htmlTemplate.title = 'Calendar E-mail is not found in Gong';
-      htmlTemplate.text = 'The calendar E-mail is not listed as a valid E-mail address for this Gong user. Consider adding it as an E-mail alias';
-      return htmlTemplate.evaluate();
-    } else if (noProviderUrl) {
+    if (noProviderUrl) {
       console.log("noProviderUrl")
       var provider = additionalInfo.split('/')[1];
       var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
@@ -87,8 +81,10 @@ function authCallback(request) {
     var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
       htmlTemplate.title = 'You cannot log in at this time';
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-7JXDRT2bhcg/Xe_LdnzEauI/AAAAAAAABKM/cuRFEgW9x4c_Ig2zkxnQRY43FQCZON-DgCLcBGAsYHQ/s400/ic_cant_login.png';
-    if (additionalInfo) {//consent-page-disabled
-      htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar. ';
+    if (consentPageDisabled) {
+      htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar.';
+    } else if (calendarEmailUserMismatch) {
+      htmlTemplate.text = 'The calendar E-mail is not listed as a valid E-mail address for this Gong user. Consider adding it as an E-mail alias.';
     } else {
       htmlTemplate.text = 'If the problem persist contact Gong support.';
     }

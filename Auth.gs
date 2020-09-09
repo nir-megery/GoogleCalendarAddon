@@ -25,16 +25,17 @@ function getAuthService() {
       // Set the scopes to request (space-separated for Google services).
       .setScope('https://app.gong.io/calendar/add-on')
   
-      .setParam('approval_prompt', 'auto');
-  
-      //.setParam('email',Session.getActiveUser().getEmail());
+      .setParam('approval_prompt', 'auto')
+
+      .setParam('login_hint', Session.getEffectiveUser().getEmail());
+
 }
 
 /**
  * webpp handler
  */
 function doGet(e) {  
-  console.log(e);
+  console.info("doGet", e);
   if(e.parameter['code'] != null){
     return authCallback(e);
     
@@ -51,14 +52,18 @@ function doGet(e) {
 
 
 function authCallback(request) {
-    console.log(request);
+  console.info("authCallback", request);
 
   var authService = getAuthService();
   var code = request.parameter['code'];
   var isAuthorized = code.length>0 && authService.handleCallback(request);
   var additionalInfo = request.parameter['additional-info'];
+  var noProviderUrl = additionalInfo.indexOf('no-provider-url') === 0;
+  var calendarEmailUserMismatch = additionalInfo === 'calender-email-mismatch';
+  var consentPageDisabled = additionalInfo === 'consent-page-disabled';
   if (isAuthorized) {
-    if (additionalInfo) {//no-provider-url
+    if (noProviderUrl) {
+      console.log("noProviderUrl")
       var provider = additionalInfo.split('/')[1];
       var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-igkjzvTY6mQ/Xe_L2Npz0KI/AAAAAAAABKY/RgmWNGNkXlkEUkqFW6YJy1pTcchWgeH2wCLcBGAsYHQ/s400/link.png';
@@ -76,8 +81,10 @@ function authCallback(request) {
     var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
       htmlTemplate.title = 'You cannot log in at this time';
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-7JXDRT2bhcg/Xe_LdnzEauI/AAAAAAAABKM/cuRFEgW9x4c_Ig2zkxnQRY43FQCZON-DgCLcBGAsYHQ/s400/ic_cant_login.png';
-    if (additionalInfo) {//consent-page-disabled
-      htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar. ';
+    if (consentPageDisabled) {
+      htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar.';
+    } else if (calendarEmailUserMismatch) {
+      htmlTemplate.text = 'The calendar E-mail is not listed as a valid E-mail address for this Gong user. Consider adding it as an E-mail alias.';
     } else {
       htmlTemplate.text = 'If the problem persist contact Gong support.';
     }
@@ -92,7 +99,7 @@ function logout(request) {
 }
 
 OAuth2.getRedirectUri = function(scriptId) {
-  console.info(scriptId);
+  console.info("getRedirectUri", scriptId);
   return getScriptUri();
 }
 
@@ -101,5 +108,6 @@ function isLoggedIn() {
 }
 
 function getScriptUri() {
+    console.info("getScriptUri", ScriptApp.getService().getUrl());
     return ScriptApp.getService().getUrl();
 }

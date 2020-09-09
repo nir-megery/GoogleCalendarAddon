@@ -17,7 +17,7 @@
     "executeAs": "USER_ACCESSING"
   },
   "exceptionLogging": "STACKDRIVER",
-  "oauthScopes": ["https://www.googleapis.com/auth/calendar.addons.execute", "https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/script.external_request", "https://www.googleapis.com/auth/script.scriptapp"],
+  "oauthScopes": ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/calendar.addons.execute", "https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/script.external_request", "https://www.googleapis.com/auth/script.scriptapp"],
   "urlFetchWhitelist" : ["https://app.gong.io/", "https://webhooks.gong.io/"],
   "addOns": {
     "common": {

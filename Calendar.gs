@@ -6,12 +6,12 @@
  */
 function initializeSyncing(calendarId) {
   console.info('initializeSyncing of calendar', calendarId);
-  
+
   // Create a syncing trigger if it doesn't exist yet.
   createSyncTrigger(calendarId);
 
   // Perform an event sync to create the initial sync token.
-  syncEvents({'calendarId': calendarId});
+  syncEvents({ 'calendarId': calendarId });
 }
 
 
@@ -24,12 +24,12 @@ function createSyncTrigger(calendarId) {
   // Check to see if the trigger already exists; if does, return.
   var allTriggers = ScriptApp.getProjectTriggers();
   console.log('allTriggers.length', allTriggers.length);
-  
+
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
     console.log('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
   }
-  
+
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
     console.log('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
@@ -39,15 +39,15 @@ function createSyncTrigger(calendarId) {
     }
   }
 
-//triggers[i].getHandlerFunction() === fnName
+  //triggers[i].getHandlerFunction() === fnName
 
   // Trigger does not exist, so create it. The trigger calls the
   // 'syncEvents()' trigger function when it fires.
   var trigger = ScriptApp.newTrigger('syncEvents')
-      .forUserCalendar(calendarId)
-      .onEventUpdated()
-      .create();
-  
+    .forUserCalendar(calendarId)
+    .onEventUpdated()
+    .create();
+
   console.log('new trigger:', trigger);
 }
 
@@ -123,12 +123,15 @@ function syncEvents(e) {
     // to update.
     if (events.items && events.items.length > 0) {
       for (var i = 0; i < events.items.length; i++) {
-         var calEvent = events.items[i];
-         // Check to see if there is a record of this event has a
-         // conference that needs updating.
-         if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters &&calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
-           updateConference(calEvent, calEvent.conferenceData.conferenceId);
-         }
+        var calEvent = events.items[i];
+        // Check to see if there is a record of this event has a
+        // conference that needs updating.
+        // NOTE: we do not update the server with deleted events - this is on purpose.
+        // Event deletion is not a part of the addon flow - it will be done in a scheduled task.
+        if (eventHasGongConference(calEvent) && calEvent.conferenceData.parameters && calEvent.conferenceData.parameters.addOnParameters && calEvent.conferenceData.parameters.addOnParameters.parameters.createMeetingPerUrl) {
+          // console.log("Updating the conference!")
+          updateConference(calEvent, calEvent.conferenceData.conferenceId);
+        }
       }
     }
 
@@ -151,16 +154,19 @@ function syncEvents(e) {
  *  @return {boolean}
  */
 function eventHasGongConference(calEvent) {
-//  console.log('eventHasConference:', calEvent);
-//  console.log('calEvent.conferenceData:' , calEvent.conferenceData)
-  
+  // console.log('eventHasConference:', calEvent);
+  // console.log('calEvent.conferenceData:', calEvent.conferenceData)
+
   var name = calEvent.conferenceData && calEvent.conferenceData.conferenceSolution && calEvent.conferenceData.conferenceSolution.name || null;
 
   // This version checks if the conference data solution name matches the
   // one of the solution names used by the add-on. Alternatively you could
   // check the solution's entry point URIs or other solution-specific
   // information.
-  return (name && name==="Gong Meeting");
+  // if (name) {
+  //   console.log("conferenceSolution", name)
+  // }
+  return (name && name.indexOf("Gong Meeting") == 0);
 }
 
 /**
@@ -177,16 +183,16 @@ function eventHasGongConference(calEvent) {
 function updateConference(calEvent, conferenceId) {
   console.info('calEvent', calEvent);
   var accessToken = getAuthService().getAccessToken();
-//  console.log('accessToken', accessToken);
-   try {  
+  // console.log('accessToken', accessToken);
+  try {
     var options = {
-                     'method' : 'post',
-                     'contentType': 'application/json',
-                     'payload' : JSON.stringify(calEvent),
-                     'headers': {Authorization: 'Bearer ' + accessToken},
-                     'muteHttpExceptions': true
-    } 
-    
+      'method': 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(calEvent),
+      'headers': { Authorization: 'Bearer ' + accessToken },
+      'muteHttpExceptions': true
+    }
+
     var response = UrlFetchApp.fetch(getAPIHost() + '/calendar/updateEvent', options);
 
     var code = response.getResponseCode();
@@ -194,22 +200,22 @@ function updateConference(calEvent, conferenceId) {
     if (code !== 200) {
       console.warn('updateEvent error');
     }
-    
+
   } catch (e) {
-      console.error('updateEvent error:', e);
+    console.error('updateEvent error:', e);
   }
-  
-  
-//  // Check edge case: the event was cancelled
-//  if (calEvent.status === 'cancelled') {
-//    // Use the third-party API to delete the conference too.
-//    ...
-//
-//  } else {
-//    // Extract any necessary information from the event object, then
-//    // make the appropriate third-party API requests to update the
-//    // conference with that information.
-//    ...
-//  }
+
+
+  //  // Check edge case: the event was cancelled
+  //  if (calEvent.status === 'cancelled') {
+  //    // Use the third-party API to delete the conference too.
+  //    ...
+  //
+  //  } else {
+  //    // Extract any necessary information from the event object, then
+  //    // make the appropriate third-party API requests to update the
+  //    // conference with that information.
+  //    ...
+  //  }
 }
 

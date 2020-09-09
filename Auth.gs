@@ -84,7 +84,14 @@ function authCallback(request) {
     if (consentPageDisabled) {
       htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar.';
     } else if (calendarEmailUserMismatch) {
-      htmlTemplate.text = 'The calendar E-mail is not listed as a valid E-mail address for this Gong user. Consider adding it as an E-mail alias.';
+      htmlTemplate.title = 'Calendar email is unknown to Gong';
+      const gongUserEmail = request.parameter['gong-user-email'];
+      const googleCalendarUserEmail = request.parameter['google-calendar-user-email'];
+      if (gongUserEmail && googleCalendarUserEmail) {
+        htmlTemplate.text = googleCalendarUserEmail + ' is not listed as a valid email address for Gong user ' + gongUserEmail + '. Consider adding it as an email alias.';
+      } else {
+        htmlTemplate.text = 'The calendar email is not listed as a valid email address for this Gong user. Consider adding it as an email alias.';
+      }
     } else {
       htmlTemplate.text = 'If the problem persist contact Gong support.';
     }

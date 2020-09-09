@@ -66,9 +66,11 @@ function getConferenceData() {
   
   try {  
   
+    const eventOrganizerEmail = Session.getEffectiveUser().getEmail();
     console.info(getAPIHost() + '/calendar/getJumpPageInfo');
 
-    var response = UrlFetchApp.fetch(getAPIHost() + '/calendar/getJumpPageInfo', {
+    const getJumpPageInfoUrl = getAPIHost() + '/calendar/getJumpPageInfo?event-organizer-email=' + eventOrganizerEmail;
+    var response = UrlFetchApp.fetch(getJumpPageInfoUrl, {
                                      headers: {Authorization: 'Bearer ' + accessToken},
                                      muteHttpExceptions: true});
 

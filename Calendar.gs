@@ -34,7 +34,7 @@ function createSyncTrigger(calendarId) {
     var trigger = allTriggers[i];
     console.log('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
     console.log('trigger.getHandlerFunction:', trigger.getHandlerFunction());
-    if (trigger.getTriggerSourceId() === calendarId || trigger.getHandlerFunction() === 'syncEvents') {
+    if (trigger.getTriggerSourceId() === calendarId && trigger.getHandlerFunction() === 'syncEvents') {
       return;
     }
   }

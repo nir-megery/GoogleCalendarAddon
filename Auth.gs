@@ -66,6 +66,7 @@ function authCallback(request) {
       console.log("noProviderUrl")
       var provider = additionalInfo.split('/')[1];
       var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
+      htmlTemplate.closeButtonLabel = 'close';
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-igkjzvTY6mQ/Xe_L2Npz0KI/AAAAAAAABKY/RgmWNGNkXlkEUkqFW6YJy1pTcchWgeH2wCLcBGAsYHQ/s400/link.png';
       htmlTemplate.title = 'Add your personal meeting room link';
       htmlTemplate.text = 'Log in succeeded. Before scheduling the first Gong meeting, add your ' + provider + ' personal meeting room link to "My Profile" page in Gong.';
@@ -79,18 +80,20 @@ function authCallback(request) {
     }
   } else {
     var htmlTemplate = HtmlService.createTemplateFromFile('Feedback');
+      htmlTemplate.closeButtonLabel = 'close';
       htmlTemplate.title = 'You cannot log in at this time';
       htmlTemplate.imgSrc = 'https://lh3.googleusercontent.com/-7JXDRT2bhcg/Xe_LdnzEauI/AAAAAAAABKM/cuRFEgW9x4c_Ig2zkxnQRY43FQCZON-DgCLcBGAsYHQ/s400/ic_cant_login.png';
     if (consentPageDisabled) {
       htmlTemplate.text = 'The consent page is not enabled for your company.\nAsk your Gong admin to set it up before you can log in to Gong for Google calendar.';
     } else if (calendarEmailUserMismatch) {
-      htmlTemplate.title = 'Calendar email is unknown to Gong';
+        htmlTemplate.title = 'We don\'t recognize that email address';
+      htmlTemplate.closeButtonLabel = 'OK';
       const gongUserEmail = request.parameter['gong-user-email'];
       const googleCalendarUserEmail = request.parameter['google-calendar-user-email'];
       if (gongUserEmail && googleCalendarUserEmail) {
-        htmlTemplate.text = googleCalendarUserEmail + ' is not listed as a valid email address for Gong user ' + gongUserEmail + '. Consider adding it as an email alias.';
+        htmlTemplate.text = googleCalendarUserEmail + ' is not associated with ' + gongUserEmail + '. Add this address as an alias for this person to connect this calendar.';
       } else {
-        htmlTemplate.text = 'The calendar email is not listed as a valid email address for this Gong user. Consider adding it as an email alias.';
+        htmlTemplate.text = 'The calendar email is not listed as a valid email address for this Gong user. Add this address as an alias for this person to connect this calendar.';
       }
     } else {
       htmlTemplate.text = 'If the problem persist contact Gong support.';

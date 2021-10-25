@@ -11,7 +11,7 @@ function initializeSyncing(calendarId) {
   createSyncTrigger(calendarId);
 
   // Perform an event sync to create the initial sync token.
-  syncEvents({ 'calendarId': calendarId });
+//  syncCalendarEvents({ 'calendarId': calendarId });
 }
 
 
@@ -27,14 +27,22 @@ function createSyncTrigger(calendarId) {
 
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
-    console.log('trigger[', i, ']:', trigger.getEventType(), trigger.getHandlerFunction(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getUniqueId());
+    console.log('trigger[', i, ']:', trigger.getUniqueId(), trigger.getEventType(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getHandlerFunction());
+
+    if (trigger.getTriggerSourceId() === calendarId && trigger.getHandlerFunction() === 'syncEvents') {
+      console.log('delete trigger[', i, ']:', trigger.getUniqueId(), trigger.getEventType(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getHandlerFunction());
+      ScriptApp.deleteTrigger(trigger);
+    }
   }
+
+  var allTriggers = ScriptApp.getProjectTriggers();
+  console.log('allTriggers.length', allTriggers.length);
 
   for (var i = 0; i < allTriggers.length; i++) {
     var trigger = allTriggers[i];
     console.log('trigger.getTriggerSourceId: ', trigger.getTriggerSourceId());
     console.log('trigger.getHandlerFunction:', trigger.getHandlerFunction());
-    if (trigger.getTriggerSourceId() === calendarId && trigger.getHandlerFunction() === 'syncEvents') {
+    if (trigger.getTriggerSourceId() === calendarId && trigger.getHandlerFunction() === 'syncCalendarEvents') {
       return;
     }
   }
@@ -42,13 +50,13 @@ function createSyncTrigger(calendarId) {
   //triggers[i].getHandlerFunction() === fnName
 
   // Trigger does not exist, so create it. The trigger calls the
-  // 'syncEvents()' trigger function when it fires.
-  var trigger = ScriptApp.newTrigger('syncEvents')
+  // 'syncCalendarEvents()' trigger function when it fires.
+  var trigger = ScriptApp.newTrigger('syncCalendarEvents')
     .forUserCalendar(calendarId)
     .onEventUpdated()
     .create();
 
-  console.log('new trigger:', trigger);
+  console.log('new trigger:', trigger.getUniqueId(), trigger.getEventType(), trigger.getTriggerSource(), trigger.getTriggerSourceId(), trigger.getHandlerFunction());
 }
 
 
@@ -66,8 +74,8 @@ function createSyncTrigger(calendarId) {
  *      calling trigger ID. Only the calendar ID is actually used here,
  *      however.
  */
-function syncEvents(e) {
-  console.log("syncEvents:", e);
+function syncCalendarEvents(e) {
+  console.log("syncCalendarEvents:", e);
   var calendarId = e.calendarId;
   var properties = PropertiesService.getUserProperties();
   var syncToken = properties.getProperty('syncToken');
@@ -111,7 +119,7 @@ function syncEvents(e) {
       // if so, perform a full sync instead.
       if (err.message && err.message.toLowerCase().indexOf("a full sync is required") !== -1) {
         properties.deleteProperty('syncToken');
-        syncEvents(e);
+        syncCalendarEvents(e);
         return;
       } else {
         console.error('err', err);
@@ -154,7 +162,7 @@ function syncEvents(e) {
  *  @return {boolean}
  */
 function eventHasGongConference(calEvent) {
-  // console.log('eventHasConference:', calEvent);
+  console.log('eventHasConference:', calEvent);
   // console.log('calEvent.conferenceData:', calEvent.conferenceData)
 
   var name = calEvent.conferenceData && calEvent.conferenceData.conferenceSolution && calEvent.conferenceData.conferenceSolution.name || null;
